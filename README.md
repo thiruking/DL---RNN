@@ -49,11 +49,11 @@ Predict on test data, plot actual vs. predicted prices.
 
 ```python
 # -------------------------------------------------------------
-# 🎯 Stock Price Prediction using RNN (Complete Project)
+# Stock Price Prediction using RNN (Complete Project)
 # Developed by: [THIRUMALAI K]
 # -------------------------------------------------------------
 
-# ✅ Step 1: Imports
+# Step 1: Imports
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -62,7 +62,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
-# ✅ Step 2: Load & Preprocess Dataset
+# Step 2: Load & Preprocess Dataset
 df_train = pd.read_csv('trainset.csv')
 df_test = pd.read_csv('testset.csv')
 
@@ -90,11 +90,11 @@ y_train_tensor = torch.tensor(y_train, dtype=torch.float32)
 x_test_tensor = torch.tensor(x_test, dtype=torch.float32)
 y_test_tensor = torch.tensor(y_test, dtype=torch.float32)
 
-# ✅ Prepare DataLoader
+# Prepare DataLoader
 train_dataset = TensorDataset(x_train_tensor, y_train_tensor)
 train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 
-# ✅ Step 3: Define RNN Model
+# Step 3: Define RNN Model
 class RNNModel(nn.Module):
     def __init__(self, input_size=1, hidden_size=64, num_layers=2, output_size=1):
         super(RNNModel, self).__init__()
@@ -105,21 +105,21 @@ class RNNModel(nn.Module):
         out, _ = self.rnn(x)
         return self.fc(out[:, -1, :])  # Take the output from last timestep
 
-# ✅ Step 4: Initialize Model
+# Step 4: Initialize Model
 model = RNNModel()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = model.to(device)
 
-# ✅ Optional: Print Summary
+# Optional: Print Summary
 !pip install -q torchinfo
 from torchinfo import summary
 summary(model, input_size=(64, 60, 1))
 
-# ✅ Step 5: Setup Loss + Optimizer
+# Step 5: Setup Loss + Optimizer
 criterion = nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
-# ✅ Step 6: Train the Model
+# Step 6: Train the Model
 epochs = 35
 train_losses = []
 
@@ -139,7 +139,7 @@ for epoch in range(epochs):
     train_losses.append(avg_loss)
     print(f"Epoch {epoch+1}/{epochs}, Loss: {avg_loss:.6f}")
 
-# ✅ Step 7: Plot Training Loss
+# Step 7: Plot Training Loss
 print('Name: THIRUMALAI K')
 print('Register Number: 212224240176')
 plt.plot(train_losses, label='Training Loss')
@@ -150,7 +150,7 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
-# ✅ Step 8: Predict on Test Set
+# Step 8: Predict on Test Set
 model.eval()
 with torch.no_grad():
     predicted = model(x_test_tensor.to(device)).cpu().numpy()
@@ -160,7 +160,7 @@ with torch.no_grad():
 predicted_prices = scaler.inverse_transform(predicted)
 actual_prices = scaler.inverse_transform(actual)
 
-# ✅ Plot Predicted vs Actual Prices
+# Plot Predicted vs Actual Prices
 print('Name: THIRUMALAI K')
 print('Register Number: 212224240176')
 plt.figure(figsize=(10, 6))
@@ -173,7 +173,7 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
-# ✅ Final Prediction Output
+# Final Prediction Output
 print(f'Last Predicted Price: {predicted_prices[-1][0]:.2f}')
 print(f'Actual Price:          {actual_prices[-1][0]:.2f}')
 
